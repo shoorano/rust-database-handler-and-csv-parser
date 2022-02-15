@@ -6,7 +6,7 @@ pub struct Example {
 }
 
 impl Example {
-    fn init(arg_1: i32, arg_2: i32, arg_3: Option<String> ) -> Self {
+    pub fn init(arg_1: i32, arg_2: i32, arg_3: Option<String> ) -> Self {
         Self {
             arg_1,
             arg_2,

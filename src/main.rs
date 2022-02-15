@@ -31,21 +31,8 @@ fn create_table(conn: &mut PooledConn, create_table_string: String) -> Result<()
     Ok(())
 }
 
-// fn insert_into_table<T>(conn: &mut PooledConn, table: String, data: Vec<T>) {
-//     // Now let's insert testing to the database
-//     // conn.exec_batch(
-//     //     r"INSERT INTO testing (customer_id, amount, account_name)
-//     //     VALUES (:customer_id, :amount, :account_name)",
-//     //     data.iter().map(|p| params! {
-//     //         "customer_id" => p.customer_id,
-//     //         "amount" => p.amount,
-//     //         "account_name" => &p.account_name,
-//     //     })
-//     // )?;
-// }
-
-/// function that receives a query string and a database connect 
-/// and makes a call to create a mysql table
+/// function that receives a query string, a mapper closure and a database connection 
+/// and returns the query result which is mapped using the mapper closure
 /// 
 /// args:
 ///     conn: &mut PooledConn
@@ -77,7 +64,7 @@ fn main() {
     let mut conn = get_conn().unwrap();
     let query = "select * from testing;";
     let mapper = |(arg_1, arg_2, arg_3)| {
-        Example { arg_1, arg_2, arg_3 }
+        Example::init(arg_1, arg_2, arg_3)
     };
     let examples = vec![
         Example { arg_1: 1, arg_2: 2, arg_3: None },
