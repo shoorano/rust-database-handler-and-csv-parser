@@ -67,3 +67,12 @@ where
         )?;
     Ok(result)
 }
+
+pub fn query_table_new(conn: &mut PooledConn, query: String) -> Result<()> {
+    let row: Row = conn.exec_first(query, ())?.unwrap();
+    println!("{:?}", row);
+    for i in 0..row.len() {
+        println!("{:?}", row[i]);
+    };
+    Ok(())
+}
