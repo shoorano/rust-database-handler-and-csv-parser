@@ -70,6 +70,29 @@ impl SearchQuery {
             graph_order
         }
     }
+    pub fn from_row(row: &mut Row) -> Self {
+        Self::init(
+            row.take("id").unwrap(),
+            row.take("created_at"),
+            row.take("updated_at"),
+            row.take("account_id").unwrap(),
+            row.take("search_query_id").unwrap(),
+            row.take("date_range"),
+            row.take("impressions"),
+            row.take("clicks"),
+            row.take("conversions"),
+            row.take("average_position"),
+            row.take("cost"),
+            row.take("average_cpc"),
+            row.take("conversion_value"),
+            row.take("cpa"),
+            row.take("roas"),
+            row.take("conversion_rate"),
+            row.take("ctr"),
+            row.take("show_on_graph"),
+            row.take("graph_order"),
+        )
+    }
 }
 
 

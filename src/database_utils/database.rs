@@ -1,4 +1,5 @@
 use super::utils::*;
+use super::search_queries::*;
 use mysql::*;
 use mysql::prelude::*;
 
@@ -69,10 +70,9 @@ where
 }
 
 pub fn query_table_new(conn: &mut PooledConn, query: String) -> Result<()> {
-    let row: Row = conn.exec_first(query, ())?.unwrap();
+    let mut row: Row = conn.exec_first(query, ())?.unwrap();
     println!("{:?}", row);
-    for i in 0..row.len() {
-        println!("{:?}", row[i]);
-    };
+    let search_query = SearchQuery::from_row(&mut row);
+    println!("{:?}", search_query);
     Ok(())
 }
