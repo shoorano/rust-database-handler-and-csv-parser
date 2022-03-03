@@ -1,6 +1,8 @@
 use super::utils::*;
+use super::search_queries::*;
 use mysql::*;
 use mysql::prelude::*;
+use chrono::naive::{NaiveDateTime, NaiveDate, NaiveTime};
 
 /// returns a database connection: PooledConn
 pub fn get_conn() -> Result<PooledConn> {
@@ -69,10 +71,21 @@ where
 }
 
 pub fn query_table_new(conn: &mut PooledConn, query: String) -> Result<()> {
-    let row: Row = conn.exec_first(query, ())?.unwrap();
-    println!("{:?}", row);
-    for i in 0..row.len() {
-        println!("{:?}", row[i]);
-    };
+    let mut row: Row = conn.exec_first(query, ())?.unwrap();
+    // https://github.com/blackbeam/rust-mysql-simple/issues/172
+    let search_query = SearchQuery::from_row(&mut row);
+    println!("{:?}", search_query);
     Ok(())
+}
+
+pub fn parse_time_to_naive_date_time(date: Value) -> Option<NaiveDateTime > {
+        match date {
+            Value::Date(y, m, d, h, i, s, us) => Some(
+                    NaiveDateTime::new(
+                        NaiveDate::from_ymd(y as i32, m as u32, d as u32),
+                        NaiveTime::from_hms_nano(h as u32, i as u32, s as u32, us)
+                    )
+                ),
+            _ => None
+        }
 }

@@ -2,12 +2,13 @@ use super::database::*;
 use super::utils::*;
 use mysql::*;
 use mysql::prelude::*;
+use chrono::naive::{NaiveDate, NaiveTime, NaiveDateTime};
 
 #[derive(Debug, PartialEq, PartialOrd)]
 pub struct SearchQuery {
     pub id: String,
-    pub created_at: Option<String>,
-    pub updated_at: Option<String>,
+    pub created_at: Option<NaiveDateTime>,
+    pub updated_at: Option<NaiveDateTime>,
     pub account_id: String,
     pub search_query_id: String,
     pub date_range: Option<String>,
@@ -29,8 +30,8 @@ pub struct SearchQuery {
 impl SearchQuery {
     pub fn init(
         id: String,
-        created_at: Option<String>,
-        updated_at: Option<String>,
+        created_at: Option<NaiveDateTime>,
+        updated_at: Option<NaiveDateTime>,
         account_id: String,
         search_query_id: String,
         date_range: Option<String>,
@@ -69,6 +70,29 @@ impl SearchQuery {
             show_on_graph,
             graph_order
         }
+    }
+    pub fn from_row(row: &mut Row) -> Self {
+        Self::init(
+            row.take("id").unwrap(),
+            parse_time_to_naive_date_time(row.take("created_at").unwrap()),
+            parse_time_to_naive_date_time(row.take("updated_at").unwrap()),
+            row.take("account_id").unwrap(),
+            row.take("search_query_id").unwrap(),
+            row.take("date_range"),
+            row.take("impressions"),
+            row.take("clicks"),
+            row.take("conversions"),
+            row.take("average_position"),
+            row.take("cost"),
+            row.take("average_cpc"),
+            row.take("conversion_value"),
+            row.take("cpa"),
+            row.take("roas"),
+            row.take("conversion_rate"),
+            row.take("ctr"),
+            row.take("show_on_graph"),
+            row.take("graph_order"),
+        )
     }
 }
 
