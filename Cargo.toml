@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 mysql = "*"
 dotenv = "0.15.0"
+chrono = "0.4.19"
